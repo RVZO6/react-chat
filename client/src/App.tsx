@@ -1,6 +1,7 @@
 import { io } from "socket.io-client"
 import clsx from "clsx"
 import React, { useState, useEffect, useRef } from "react"
+import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
@@ -141,23 +142,44 @@ export default function App() {
           </CardHeader>
           <CardContent
             ref={scrollContainerRef}
-            className="h-[500px] flex flex-col overflow-y-auto p-4 space-y-2">
+            className="h-[500px] flex flex-col overflow-y-auto p-4 space-y-2 scroll-smooth no-scrollbar">
             {
               chatMessages.map((message, index) => {
                 const isMyMessage = message.username === username
                 return (
-                  <div
+                  <motion.div
                     key={index}
+                    // 2. Define the starting state of the animation
+                    initial={{
+                      opacity: 0,   // Start invisible
+                      scale: 0.8,   // Start slightly smaller
+                      y: 20,        // Start 20px lower
+                    }}
+                    // 3. Define the final state of the animation
+                    animate={{
+                      opacity: 1,   // End fully visible
+                      scale: 1,     // End at normal size
+                      y: 0,         // End at its normal Y position
+                    }}
+                    // 4. Define the physics of the transition
+                    transition={{
+                      type: "spring", // Use a spring physics for a bouncy, natural feel
+                      stiffness: 260, // How "stiff" the spring is
+                      damping: 20,    // How much friction is applied
+                      duration: 0.3,  // A quick duration
+                    }}
+                    // The conditional styling logic remains the same
                     className={clsx(
                       'p-2 rounded-lg max-w-xs min-w-32 break-words',
                       {
                         'self-end bg-blue-500 text-white': isMyMessage,
                         'self-start bg-gray-200 dark:bg-gray-700': !isMyMessage,
                       }
-                    )}>
+                    )}
+                  >
                     <strong className="block">{message.username}</strong>
                     {message.message}
-                  </div>
+                  </motion.div>
                 );
               })}
 
