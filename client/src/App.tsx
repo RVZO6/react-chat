@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 
-const socket = io(import.meta.env.VITE_SOCKET_URL)
+const socket = io(process.env.VITE_SOCKET_URL)
 export default function App() {
   interface ChatEntry {
     username: string;
