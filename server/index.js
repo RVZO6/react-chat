@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     // This should match the URL of your Vite client
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://rvzo-react-chat.vercel.app"],
     methods: ["GET", "POST"],
   },
 });
@@ -22,7 +22,6 @@ io.on("connection", (socket) => {
     console.log(`user ${socket.id} registered as ${username}`);
     socket.username = username;
   });
-  // The rest of the logic is exactly the same
 
   socket.on("typing", () => {
     socket.broadcast.emit("user typing", { username: socket.username });
