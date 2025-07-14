@@ -157,3 +157,7 @@
 .bounce-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
