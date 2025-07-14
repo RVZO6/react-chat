@@ -17,6 +17,7 @@ export default function App() {
   const [usernameInput, setUsernameInput] = useState('')
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   //sync messages with server
   useEffect(() => {
@@ -61,15 +62,29 @@ export default function App() {
     };
   }, []); // Empty dependency array is correct.
   //autoscroll
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  // }, [chatMessages])
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [chatMessages])
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    }
+  }, [chatMessages]);
 
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    socket.emit('chat message', { username: username, message: textInput })
-    setTextInput('')
+    e.preventDefault();
+    if (textInput.trim()) {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      socket.emit('stop typing');
+      socket.emit('chat message', { username: username, message: textInput });
+      setTextInput('');
+    }
+
+
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -124,7 +139,9 @@ export default function App() {
           <CardHeader>
             <CardTitle>Real-Time Chat</CardTitle>
           </CardHeader>
-          <CardContent className="h-[500px] flex flex-col overflow-y-auto p-4 space-y-2">
+          <CardContent
+            ref={scrollContainerRef}
+            className="h-[500px] flex flex-col overflow-y-auto p-4 space-y-2">
             {
               chatMessages.map((message, index) => {
                 const isMyMessage = message.username === username
