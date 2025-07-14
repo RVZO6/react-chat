@@ -117,7 +117,6 @@ export default function App() {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">
         <Card className="w-[450px]">
-          <CardHeader />
           <CardContent className="h-[500px] flex items-center justify-center">
             <form onSubmit={handleUsernameSubmit} className="flex w-full max-w-sm space-x-2">
               <Input
@@ -136,10 +135,7 @@ export default function App() {
   } else {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-gray-900">
-        <Card className="w-[450px]">
-          <CardHeader>
-            <CardTitle>Real-Time Chat</CardTitle>
-          </CardHeader>
+        <Card className="w-[450px] flex flex-col">
           <CardContent
             ref={scrollContainerRef}
             className="h-[500px] flex flex-col overflow-y-auto p-4 space-y-2 scroll-smooth no-scrollbar">
